@@ -11,12 +11,12 @@ namespace GhostHunter.Scenes.Game
         {
             transform.position += GetVelocity() * Time.deltaTime;
         }
-
+        
         private Vector3 GetVelocity()
         {
             return Vector3.up * MoveSpeed;    
         }
         
-        public class Factory : PlaceholderFactory<float, Ghost>{}
+        public class Pool: MemoryPool<Ghost>{}
     }
 }
