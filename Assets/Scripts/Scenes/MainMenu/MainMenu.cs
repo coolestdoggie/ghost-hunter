@@ -29,7 +29,7 @@ namespace GhostHunter.Scenes.MainMenu
 
         private void PlayButtonPressed()
         {
-            _sceneLoader.LoadScene(1); //TODO: Remove literals
+            _sceneLoader.LoadScene(1); //TODO: Remove literal
         }
     }
 }
