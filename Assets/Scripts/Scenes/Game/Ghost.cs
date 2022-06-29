@@ -5,13 +5,14 @@ using Random = UnityEngine.Random;
 
 namespace GhostHunter.Scenes.Game
 {
-    public class Ghost : MonoBehaviour, IPoolable<IMemoryPool>, IDisposable
+    public class Ghost : MonoBehaviour, IPoolable<ScoreCounter, IMemoryPool>, IDisposable
     {
         [SerializeField] private Vector2 ghostClampMoveSpeed;
         [SerializeField] private Vector2 positionXClampOfGhostSpawn;
         [SerializeField] private float verticalSpawnPoint;
         
         private IMemoryPool _pool;
+        private ScoreCounter _scoreCounter;
         private float _currentMoveSpeed;
 
         public event Action Disposed;
@@ -26,11 +27,14 @@ namespace GhostHunter.Scenes.Game
         private void OnMouseDown() 
         {
             OnDisposed();
+            _scoreCounter.CurrentScore++;
             Dispose();
         }
 
         private void OnBecameInvisible()
         {
+            if (!gameObject.activeSelf) return;
+            
             OnDisposed();
             Dispose();
         }
@@ -41,9 +45,10 @@ namespace GhostHunter.Scenes.Game
             Disposed = delegate {  };
         }
         
-        public void OnSpawned(IMemoryPool pool)
+        public void OnSpawned(ScoreCounter scoreCounter, IMemoryPool pool)
         {
             _pool = pool;
+            _scoreCounter = scoreCounter;
             _currentMoveSpeed = Random.Range(ghostClampMoveSpeed.x, ghostClampMoveSpeed.y);
             
             float randomX = Random.Range(positionXClampOfGhostSpawn.x, positionXClampOfGhostSpawn.y);
@@ -55,12 +60,12 @@ namespace GhostHunter.Scenes.Game
             _pool = null;
             _currentMoveSpeed = 0;
         }
-        
+
         protected virtual void OnDisposed()
         {
             Disposed?.Invoke();
         }
         
-        public class Factory : PlaceholderFactory<Ghost>{}
+        public class Factory : PlaceholderFactory<ScoreCounter, Ghost>{}
     }
 }

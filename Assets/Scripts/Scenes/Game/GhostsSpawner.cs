@@ -11,11 +11,16 @@ namespace GhostHunter.Scenes.Game
         [SerializeField] private int ghostsNumber;
         
         private Ghost.Factory _ghostsFactory;
+        private ScoreCounter _scoreCounter;
         private readonly List<Ghost> _ghosts = new List<Ghost>();
         
         [Inject]
-        private void Construct(Ghost.Factory ghostsFactory) => _ghostsFactory = ghostsFactory;
-        
+        private void Construct(ScoreCounter scoreCounter, Ghost.Factory ghostsFactory)
+        {
+            _ghostsFactory = ghostsFactory;
+            _scoreCounter = scoreCounter;
+        }
+
         public void Start() => StartCoroutine(SpawnStartWave());
         
         private IEnumerator SpawnStartWave()
@@ -29,10 +34,9 @@ namespace GhostHunter.Scenes.Game
         
         public void AddGhost()
         {
-            var ghost = _ghostsFactory.Create();
+            var ghost = _ghostsFactory.Create(_scoreCounter);
             
             ghost.Disposed += AddGhost;
-            ghost.transform.SetParent(null);
             
             _ghosts.Add(ghost);
         }
