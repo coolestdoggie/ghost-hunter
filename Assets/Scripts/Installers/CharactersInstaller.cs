@@ -9,6 +9,9 @@ public class CharactersInstaller : MonoInstaller
     public override void InstallBindings()
     {
         Container.BindInterfacesTo<GhostsSpawner>().AsSingle();
-        Container.BindMemoryPool<Ghost, Ghost.Pool>().FromComponentInNewPrefab(ghostPrefab);
+        Container
+            .BindFactory<Ghost, Ghost.Factory>()
+            .FromMonoPoolableMemoryPool(x => x.FromComponentInNewPrefab(ghostPrefab).
+            UnderTransformGroup("Ghosts"));
     }
 }

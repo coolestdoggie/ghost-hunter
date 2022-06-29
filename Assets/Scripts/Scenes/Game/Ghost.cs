@@ -1,14 +1,18 @@
+using System;
 using UnityEngine;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace GhostHunter.Scenes.Game
 {
-    public class Ghost : MonoBehaviour
+    public class Ghost : MonoBehaviour, IPoolable<IMemoryPool>, IDisposable
     {
         [SerializeField] private Vector2 ghostClampMoveSpeed;
         [SerializeField] private Vector2 positionXClampOfGhostSpawn;
         [SerializeField] private float verticalSpawnPoint;
+        
         private float moveSpeed;
+        private IMemoryPool _pool;
         
         private void Update()
         {
@@ -20,20 +24,31 @@ namespace GhostHunter.Scenes.Game
             return Vector3.up * moveSpeed;
         }
 
-        private void Reset()
+        private void OnMouseDown()
         {
-            moveSpeed = Random.Range(ghostClampMoveSpeed.x, ghostClampMoveSpeed.y);
+            Dispose();
+        }
 
+        public void OnDespawned()
+        {
+            _pool = null;
+            moveSpeed = 0;
+        }
+
+        public void OnSpawned(IMemoryPool pool)
+        {
+            _pool = pool;
+            moveSpeed = Random.Range(ghostClampMoveSpeed.x, ghostClampMoveSpeed.y);
+            
             float randomX = Random.Range(positionXClampOfGhostSpawn.x, positionXClampOfGhostSpawn.y);
             transform.position = new Vector3(randomX, verticalSpawnPoint, 0);
         }
 
-        public class Pool : MemoryPool<Ghost>
+        public void Dispose()
         {
-            protected override void Reinitialize(Ghost ghost)
-            {
-               ghost.Reset();
-            }
+            _pool.Despawn(this);
         }
+        
+        public class Factory : PlaceholderFactory<Ghost>{}
     }
 }
