@@ -14,16 +14,15 @@ namespace GhostHunter.Scenes.Game
         private readonly List<Ghost> _ghosts = new List<Ghost>();
         
         [Inject]
-        private void Construct(Ghost.Factory ghostsFactory)
-        {
-            _ghostsFactory = ghostsFactory;
-        }
+        private void Construct(Ghost.Factory ghostsFactory) => _ghostsFactory = ghostsFactory;
 
         public void AddGhost()
         {
             var ghost = _ghostsFactory.Create();
+            
             ghost.Destroyed += AddGhost;
             ghost.transform.SetParent(null);
+            
             _ghosts.Add(ghost);
         }
 
@@ -34,11 +33,12 @@ namespace GhostHunter.Scenes.Game
                 var ghost = _ghosts[0];
                 ghost.Dispose();
                 _ghosts.Remove(ghost);
-
             }
         }
         
-        public IEnumerator Start()
+        public void Start() => StartCoroutine(SpawnStartWave());
+
+        private IEnumerator SpawnStartWave()
         {
             for (int i = 0; i < ghostsNumber; i++)
             {

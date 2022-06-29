@@ -11,8 +11,8 @@ namespace GhostHunter.Scenes.Game
         [SerializeField] private Vector2 positionXClampOfGhostSpawn;
         [SerializeField] private float verticalSpawnPoint;
         
-        private float moveSpeed;
         private IMemoryPool _pool;
+        private float _currentMoveSpeed;
 
         public event Action Destroyed;
 
@@ -20,10 +20,8 @@ namespace GhostHunter.Scenes.Game
         {
             transform.position += GetVelocity() * Time.deltaTime;
         }
-        private Vector3 GetVelocity()
-        {
-            return Vector3.up * moveSpeed;
-        }
+        
+        private Vector3 GetVelocity() => Vector3.up * _currentMoveSpeed;
         
         private void OnMouseDown() 
         {
@@ -40,7 +38,7 @@ namespace GhostHunter.Scenes.Game
         public void OnSpawned(IMemoryPool pool)
         {
             _pool = pool;
-            moveSpeed = Random.Range(ghostClampMoveSpeed.x, ghostClampMoveSpeed.y);
+            _currentMoveSpeed = Random.Range(ghostClampMoveSpeed.x, ghostClampMoveSpeed.y);
             
             float randomX = Random.Range(positionXClampOfGhostSpawn.x, positionXClampOfGhostSpawn.y);
             transform.position = new Vector3(randomX, verticalSpawnPoint, 0);
@@ -49,14 +47,14 @@ namespace GhostHunter.Scenes.Game
         public void OnDespawned()
         {
             _pool = null;
-            moveSpeed = 0;
+            _currentMoveSpeed = 0;
         }
         
-        public class Factory : PlaceholderFactory<Ghost>{}
-
         protected virtual void OnDestroyed()
         {
             Destroyed?.Invoke();
         }
+        
+        public class Factory : PlaceholderFactory<Ghost>{}
     }
 }
