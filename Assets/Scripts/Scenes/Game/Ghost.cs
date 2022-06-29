@@ -14,7 +14,7 @@ namespace GhostHunter.Scenes.Game
         private IMemoryPool _pool;
         private float _currentMoveSpeed;
 
-        public event Action Destroyed;
+        public event Action Disposed;
 
         private void Update()
         {
@@ -25,14 +25,14 @@ namespace GhostHunter.Scenes.Game
         
         private void OnMouseDown() 
         {
-            OnDestroyed();
+            OnDisposed();
             Dispose();
         }
         
         public void Dispose()
         {
             _pool.Despawn(this);
-            Destroyed = delegate {  };
+            Disposed = delegate {  };
         }
         
         public void OnSpawned(IMemoryPool pool)
@@ -50,9 +50,9 @@ namespace GhostHunter.Scenes.Game
             _currentMoveSpeed = 0;
         }
         
-        protected virtual void OnDestroyed()
+        protected virtual void OnDisposed()
         {
-            Destroyed?.Invoke();
+            Disposed?.Invoke();
         }
         
         public class Factory : PlaceholderFactory<Ghost>{}

@@ -15,12 +15,23 @@ namespace GhostHunter.Scenes.Game
         
         [Inject]
         private void Construct(Ghost.Factory ghostsFactory) => _ghostsFactory = ghostsFactory;
-
+        
+        public void Start() => StartCoroutine(SpawnStartWave());
+        
+        private IEnumerator SpawnStartWave()
+        {
+            for (int i = 0; i < ghostsNumber; i++)
+            {
+                yield return new WaitForSeconds(2.0f);
+                AddGhost();
+            }
+        }
+        
         public void AddGhost()
         {
             var ghost = _ghostsFactory.Create();
             
-            ghost.Destroyed += AddGhost;
+            ghost.Disposed += AddGhost;
             ghost.transform.SetParent(null);
             
             _ghosts.Add(ghost);
@@ -36,15 +47,7 @@ namespace GhostHunter.Scenes.Game
             }
         }
         
-        public void Start() => StartCoroutine(SpawnStartWave());
 
-        private IEnumerator SpawnStartWave()
-        {
-            for (int i = 0; i < ghostsNumber; i++)
-            {
-                yield return new WaitForSeconds(2.0f);
-                AddGhost();
-            }
-        }
+        
     }
 }
