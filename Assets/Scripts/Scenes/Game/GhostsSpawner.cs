@@ -36,7 +36,7 @@ namespace GhostHunter.Scenes.Game
         {
             var ghost = _ghostsFactory.Create(_scoreCounter);
             
-            ghost.Disposed += AddGhost;
+            ghost.Disposing += AddGhost;
             
             _ghosts.Add(ghost);
         }

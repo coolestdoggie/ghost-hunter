@@ -15,18 +15,14 @@ namespace GhostHunter.Scenes.Game
         private ScoreCounter _scoreCounter;
         private float _currentMoveSpeed;
 
-        public event Action Disposed;
+        public event Action Disposing;
 
-        private void Update()
-        {
-            transform.position += GetVelocity() * Time.deltaTime;
-        }
-        
+        private void Update() => transform.position += GetVelocity() * Time.deltaTime;
+
         private Vector3 GetVelocity() => Vector3.up * _currentMoveSpeed;
         
         private void OnMouseDown() 
         {
-            OnDisposed();
             _scoreCounter.CurrentScore++;
             Dispose();
         }
@@ -35,22 +31,22 @@ namespace GhostHunter.Scenes.Game
         {
             if (!gameObject.activeSelf) return;
             
-            OnDisposed();
             Dispose();
         }
 
         public void Dispose()
         {
+            OnDisposing();
             _pool.Despawn(this);
-            Disposed = delegate {  };
+            Disposing = delegate {  };
         }
         
         public void OnSpawned(ScoreCounter scoreCounter, IMemoryPool pool)
         {
             _pool = pool;
             _scoreCounter = scoreCounter;
-            _currentMoveSpeed = Random.Range(ghostClampMoveSpeed.x, ghostClampMoveSpeed.y);
             
+            _currentMoveSpeed = Random.Range(ghostClampMoveSpeed.x, ghostClampMoveSpeed.y);
             float randomX = Random.Range(positionXClampOfGhostSpawn.x, positionXClampOfGhostSpawn.y);
             transform.position = new Vector3(randomX, verticalSpawnPoint, 0);
         }
@@ -61,11 +57,8 @@ namespace GhostHunter.Scenes.Game
             _currentMoveSpeed = 0;
         }
 
-        protected virtual void OnDisposed()
-        {
-            Disposed?.Invoke();
-        }
-        
+        protected virtual void OnDisposing() => Disposing?.Invoke();
+
         public class Factory : PlaceholderFactory<ScoreCounter, Ghost>{}
     }
 }
