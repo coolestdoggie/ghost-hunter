@@ -5,8 +5,11 @@ namespace GhostHunter.Scenes.Game
 {
     public class Ghost : MonoBehaviour
     {
-        [field: SerializeField] public float MoveSpeed { get; set; }
-
+        [SerializeField] private Vector2 ghostClampMoveSpeed;
+        [SerializeField] private Vector2 positionXClampOfGhostSpawn;
+        [SerializeField] private float verticalSpawnPoint;
+        private float moveSpeed;
+        
         private void Update()
         {
             transform.position += GetVelocity() * Time.deltaTime;
@@ -14,19 +17,22 @@ namespace GhostHunter.Scenes.Game
         
         private Vector3 GetVelocity()
         {
-            return Vector3.up * MoveSpeed;
+            return Vector3.up * moveSpeed;
         }
 
-        private void Reset(float moveSpeed)
+        private void Reset()
         {
-            MoveSpeed = moveSpeed;
+            moveSpeed = Random.Range(ghostClampMoveSpeed.x, ghostClampMoveSpeed.y);
+
+            float randomX = Random.Range(positionXClampOfGhostSpawn.x, positionXClampOfGhostSpawn.y);
+            transform.position = new Vector3(randomX, verticalSpawnPoint, 0);
         }
 
-        public class Pool : MemoryPool<float, Ghost>
+        public class Pool : MemoryPool<Ghost>
         {
-            protected override void Reinitialize(float moveSpeed, Ghost ghost)
+            protected override void Reinitialize(Ghost ghost)
             {
-               ghost.Reset(moveSpeed);
+               ghost.Reset();
             }
         }
     }

@@ -4,8 +4,10 @@ using Zenject;
 
 namespace GhostHunter.Scenes.Game
 {
-    public class GhostsSpawner : MonoBehaviour 
+    public class GhostsSpawner : MonoBehaviour
     {
+        [SerializeField] private int possibleNumberOfEnemies;
+        
         private Ghost.Pool _ghostsPool;
         private readonly List<Ghost> _ghosts = new List<Ghost>();
         
@@ -17,7 +19,7 @@ namespace GhostHunter.Scenes.Game
 
         public void AddGhost()
         {
-            _ghosts.Add(_ghostsPool.Spawn(3));
+            _ghosts.Add(_ghostsPool.Spawn());
         }
 
         public void RemoveGhost()

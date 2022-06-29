@@ -152,6 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 592cd3d8b4ba93a4ba5f292f78846839, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  possibleNumberOfEnemies: 0
+  ghostClampMoveSpeed: {x: 0, y: 0}
+  positionXClampOfGhostSpawn: {x: -8, y: 8}
 --- !u!4 &380148017
 Transform:
   m_ObjectHideFlags: 0
