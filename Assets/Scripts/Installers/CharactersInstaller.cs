@@ -11,7 +11,7 @@ public class CharactersInstaller : MonoInstaller
         Container.BindInterfacesTo<GhostsSpawner>().AsSingle();
         Container
             .BindFactory<Ghost, Ghost.Factory>()
-            .FromMonoPoolableMemoryPool(x => x.FromComponentInNewPrefab(ghostPrefab).
+            .FromMonoPoolableMemoryPool(x => x.WithInitialSize(3).FromComponentInNewPrefab(ghostPrefab).
             UnderTransformGroup("Ghosts"));
     }
 }

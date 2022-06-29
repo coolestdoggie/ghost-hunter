@@ -13,28 +13,30 @@ namespace GhostHunter.Scenes.Game
         
         private float moveSpeed;
         private IMemoryPool _pool;
-        
+
+        public event Action Destroyed;
+
         private void Update()
         {
             transform.position += GetVelocity() * Time.deltaTime;
         }
-        
         private Vector3 GetVelocity()
         {
             return Vector3.up * moveSpeed;
         }
-
-        private void OnMouseDown()
+        
+        private void OnMouseDown() 
         {
+            OnDestroyed();
             Dispose();
         }
-
-        public void OnDespawned()
+        
+        public void Dispose()
         {
-            _pool = null;
-            moveSpeed = 0;
+            _pool.Despawn(this);
+            Destroyed = delegate {  };
         }
-
+        
         public void OnSpawned(IMemoryPool pool)
         {
             _pool = pool;
@@ -44,11 +46,17 @@ namespace GhostHunter.Scenes.Game
             transform.position = new Vector3(randomX, verticalSpawnPoint, 0);
         }
 
-        public void Dispose()
+        public void OnDespawned()
         {
-            _pool.Despawn(this);
+            _pool = null;
+            moveSpeed = 0;
         }
         
         public class Factory : PlaceholderFactory<Ghost>{}
+
+        protected virtual void OnDestroyed()
+        {
+            Destroyed?.Invoke();
+        }
     }
 }
