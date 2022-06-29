@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using Zenject;
 
 namespace GhostHunter.Scenes.Game
 {
@@ -16,5 +16,7 @@ namespace GhostHunter.Scenes.Game
         {
             return Vector3.up * MoveSpeed;    
         }
+        
+        public class Factory : PlaceholderFactory<float, Ghost>{}
     }
 }
