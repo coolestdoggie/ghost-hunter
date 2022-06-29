@@ -14,9 +14,20 @@ namespace GhostHunter.Scenes.Game
         
         private Vector3 GetVelocity()
         {
-            return Vector3.up * MoveSpeed;    
+            return Vector3.up * MoveSpeed;
         }
-        
-        public class Pool: MemoryPool<Ghost>{}
+
+        private void Reset(float moveSpeed)
+        {
+            MoveSpeed = moveSpeed;
+        }
+
+        public class Pool : MemoryPool<float, Ghost>
+        {
+            protected override void Reinitialize(float moveSpeed, Ghost ghost)
+            {
+               ghost.Reset(moveSpeed);
+            }
+        }
     }
 }

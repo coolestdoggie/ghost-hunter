@@ -17,7 +17,7 @@ namespace GhostHunter.Scenes.Game
 
         public void AddGhost()
         {
-            _ghosts.Add(_ghostsPool.Spawn());
+            _ghosts.Add(_ghostsPool.Spawn(3));
         }
 
         public void RemoveGhost()
