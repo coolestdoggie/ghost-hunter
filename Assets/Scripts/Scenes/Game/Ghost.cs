@@ -28,7 +28,13 @@ namespace GhostHunter.Scenes.Game
             OnDisposed();
             Dispose();
         }
-        
+
+        private void OnBecameInvisible()
+        {
+            OnDisposed();
+            Dispose();
+        }
+
         public void Dispose()
         {
             _pool.Despawn(this);
